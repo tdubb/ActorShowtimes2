@@ -83,10 +83,8 @@ class ActorsController < ApplicationController
   	actor.save
 
     @user = current_user
-    @@zipcode = params[:zipcode]
-
-  	if !!params[:search]
-      redirect_to actor_path(actor.id, {:zipcode => params[:actor][:zipcode]})
+    if !!params[:search]
+      redirect_to actor_path(actor.id, {:zipcode => params[:zipcode]})
       # redirect_to :controller => 'actors',:action => 'show', :id => actor.id, :zipcode => params[:actor][:zipcode]
     else
       redirect_to index_path
@@ -94,7 +92,7 @@ class ActorsController < ApplicationController
   end
 
   # def index
-  # 	@actors = Actor.all
+  #   @actors = Actor.all
   # end
   def index
     @actor = Actor.new
@@ -105,7 +103,7 @@ class ActorsController < ApplicationController
 
   def show
     # render  params.inspect
-  	@actor = Actor.find(params[:id])
+    @actor = Actor.find(params[:id])
     #given actor store the movie they are inovies
     actors_movies_ids = get_actors_movies_ids(@actor.movie_db_id)  
     
@@ -113,14 +111,15 @@ class ActorsController < ApplicationController
     actors_current_films = get_actors_playing_films(actors_movies_ids)
     
     @flicks={}
-    @location = @@zipcode
+    @zipcode = params[:zipcode]
     if actors_current_films.length > 0
       scrappy = Scraper.new
-      scrappy.location = @location
+      scrappy.location = @zipcode
       scrappy.search_for_films(actors_current_films)
       @flicks = scrappy.theatres
     end
   end
+
 
    def destroy
       @actor = Actor.find(params[:id])
