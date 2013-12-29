@@ -113,7 +113,7 @@ class ActorsController < ApplicationController
     actors_current_films = get_actors_playing_films(actors_movies_ids)
     
     @flicks={}
-  @zipcode = params[:zipcode]
+  @zipcode = params[:actor][:zipcode]
     if actors_current_films.length > 0
       scrappy = Scraper.new
       scrappy.location = params[:actor][:zipcode]
