@@ -83,10 +83,9 @@ class ActorsController < ApplicationController
   	actor.save
 
     @user = current_user
-    
+    @@zipcode = params[:actor][:zipcode]
 
   	if !!params[:search]
-      @@zipcode = params[:actor][:zipcode]
       redirect_to actor_path(actor.id, {:zipcode => params[:actor][:zipcode]})
       # redirect_to :controller => 'actors',:action => 'show', :id => actor.id, :zipcode => params[:actor][:zipcode]
     else
