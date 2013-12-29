@@ -86,6 +86,7 @@ class ActorsController < ApplicationController
     
 
   	if !!params[:search]
+      @@zipcode = params[:actor][:zipcode]
       redirect_to actor_path(actor.id, {:zipcode => params[:actor][:zipcode]})
       # redirect_to :controller => 'actors',:action => 'show', :id => actor.id, :zipcode => params[:actor][:zipcode]
     else
@@ -113,10 +114,9 @@ class ActorsController < ApplicationController
     actors_current_films = get_actors_playing_films(actors_movies_ids)
     
     @flicks={}
-  @zipcode = params[:actor][:zipcode]
     if actors_current_films.length > 0
       scrappy = Scraper.new
-      scrappy.location = params[:actor][:zipcode]
+      scrappy.location = @@zipcode
       scrappy.search_for_films(actors_current_films)
       @flicks = scrappy.theatres
     end
