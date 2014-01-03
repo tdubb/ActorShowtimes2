@@ -116,7 +116,9 @@ class ActorsController < ApplicationController
     @zipcode = params[:zipcode]
     ip = request.remote_ip 
     obj = Geocoder.search(ip)
-    @zipcode ||= obj[0].postal_code
+    if @zipcode.length < 5 
+      @zipcode = obj[0].postal_code
+    end
     if actors_current_films.length > 0
       scrappy = Scraper.new
       scrappy.location = @zipcode
