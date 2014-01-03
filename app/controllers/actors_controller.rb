@@ -71,7 +71,7 @@ class ActorsController < ApplicationController
       actor = matches[0]
     end
 
-    if user_signed_in? && params[:search] != "search"
+    if user_signed_in? && params[:search] != "Search"
       #verify that these connection do not already exist before creating them
       if !current_user.actors.exists?(actor)
         current_user.actors << actor
@@ -79,33 +79,55 @@ class ActorsController < ApplicationController
       if !actor.users.exists?(current_user)
         actor.users << current_user
       end
+      actor.save
     end
-  	actor.save
-
+  	
     @user = current_user
-       
 
   	if !!params[:search]
-      redirect_to actor_path(actor.id, {:zipcode => params[:zipcode]})
-      # redirect_to :controller => 'actors',:action => 'show', :id => actor.id, :zipcode => params[:actor][:zipcode]
+      redirect_to actor_path("unsaved", {dbid: actor.movie_db_id, name: actor.name, pic: actor.picture_url, :zipcode => params[:zipcode]})
+      #redirect_to actor_path(actor.id, {:zipcode => params[:zipcode]})
     else
       redirect_to index_path
     end
   end
 
+<<<<<<< HEAD
   # def index
   #   @actors = Actor.all
   # end
+=======
+>>>>>>> 3c7f24c9bc4afef1b533191567183448f7c7d6cf
   def index
+    if !user_signed_in?
+      redirect_to :controller=>'actors', :action => 'new'
+    end
     @actor = Actor.new
     @user = current_user
     @actors = @user ? @user.actors.all : Actor.all
   end
 
-
   def show
+<<<<<<< HEAD
     # render  params.inspect
     @actor = Actor.find(params[:id])
+=======
+    #render  params.inspect
+    if !(params[:id]=="unsaved")
+  	  @actor = Actor.find(params[:id])
+    else
+      @actor = Actor.new
+    end
+    if !!params[:name]
+      @actor.name = params[:name]
+    end
+    if !!params[:dbid]
+      @actor.movie_db_id = params[:dbid]
+    end
+    if !!params[:pic]
+      @actor.picture_url = params[:pic]
+    end
+>>>>>>> 3c7f24c9bc4afef1b533191567183448f7c7d6cf
     #given actor store the movie they are inovies
     actors_movies_ids = get_actors_movies_ids(@actor.movie_db_id)  
     
@@ -116,7 +138,11 @@ class ActorsController < ApplicationController
     @zipcode = params[:zipcode]
     ip = request.remote_ip 
     obj = Geocoder.search(ip)
+<<<<<<< HEAD
     if @zipcode.length < 5 
+=======
+    if !@zipcode.present? || @zipcode.length < 5 
+>>>>>>> 3c7f24c9bc4afef1b533191567183448f7c7d6cf
       @zipcode = obj[0].postal_code
     end
     if actors_current_films.length > 0
